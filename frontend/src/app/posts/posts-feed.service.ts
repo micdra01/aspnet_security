@@ -1,12 +1,14 @@
 import {Injectable} from "@angular/core";
 import {Apollo, gql} from "apollo-angular";
 import {map} from "rxjs";
+import { User } from "src/models";
 
 export interface Post {
   id: number;
   authorId?: number;
   title: string;
   content: string;
+  author?: User
 }
 
 interface PostResponse {
@@ -20,6 +22,10 @@ const GET_POSTS = gql`
       authorId
       title
       content
+      author {
+        id
+        fullName
+      }
     }
   }
 `;

@@ -1,4 +1,5 @@
 ﻿using infrastructure.DataModels;
+using service.Services;
 
 namespace api.GraphQL.Types;
 
@@ -20,5 +21,10 @@ public class PostGql
             Title = model.Title,
             Content = model.Content
         };
+    }
+    
+    public UserGql? GetAuthor([Service] UserService service)
+    {
+        return UserGql.FromModel(service.GetById((int)this.AuthorId));
     }
 }
