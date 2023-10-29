@@ -1,5 +1,6 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import {Injectable} from "@angular/core";
+import {Apollo, gql} from "apollo-angular";
+import {map} from "rxjs";
 
 export interface Post {
     id: number;
@@ -11,11 +12,31 @@ export interface Post {
     content: string;
 }
 
+interface PostResponse {
+  post: Post;
+}
+
+const GET_POST = gql`
+  query GetPost($id: Int!) {
+    post(id: $id) {
+      id
+      author {
+        id
+        fullName
+      }
+      title
+      content
+    }
+  }
+`;
+
 @Injectable()
 export class PostService {
-    constructor(private readonly http: HttpClient) { }
+    constructor(private readonly apollo: Apollo) { }
 
     getPost(id: number) {
-        return this.http.get<Post>(`/api/posts/${id}`);
+        return this.apollo.query<PostResponse>(
+          {query: GET_POST, variables: {"id": id}})
+          .pipe(map(x => x.data.post));
     }
 }

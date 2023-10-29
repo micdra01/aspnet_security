@@ -5,7 +5,6 @@ import { User } from "src/models";
 
 export interface Post {
   id: number;
-  authorId?: number;
   title: string;
   content: string;
   author?: User
@@ -19,7 +18,6 @@ const GET_POSTS = gql`
   query GetPosts {
     posts {
       id
-      authorId
       title
       content
       author {
@@ -36,6 +34,7 @@ export class PostsFeedService {
   }
 
   getPosts() {
-    return this.apollo.query<PostResponse>({query: GET_POSTS}).pipe(map(x => x.data.posts));
+    return this.apollo.query<PostResponse>({query: GET_POSTS})
+      .pipe(map(x => x.data.posts));
   }
 }

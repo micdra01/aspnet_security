@@ -13,9 +13,9 @@ import { Post, PostsFeedService } from "./posts-feed.service";
                         <ion-card [id]="'post_'+i" [routerLink]="[post.id]">
                             <ion-card-header>
                                 <ion-card-title>{{post.title}}</ion-card-title>
+                                <ion-card-subtitle>{{post.author?.fullName}}</ion-card-subtitle>
                             </ion-card-header>
                             <ion-card-content>
-                              <ion-card-subtitle><i>{{post.author?.fullName}}</i></ion-card-subtitle>
                                 {{post.content}}
                             </ion-card-content>
                         </ion-card>
