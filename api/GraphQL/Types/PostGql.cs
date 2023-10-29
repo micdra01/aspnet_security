@@ -19,12 +19,16 @@ public class PostGql
             Id = model.Id,
             AuthorId = model.AuthorId,
             Title = model.Title,
-            Content = model.Content
         };
     }
     
     public UserGql? GetAuthor([Service] UserService service)
     {
-        return UserGql.FromModel(service.GetById((int)this.AuthorId));
+        return UserGql.FromModel(service.GetById((int)AuthorId));
+    }
+
+    public string GetContent([Service] PostService service)
+    {
+        return service.GetById(Id).Content;
     }
 }
