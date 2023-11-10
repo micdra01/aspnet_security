@@ -9,6 +9,12 @@ export interface User {
     isAdmin: boolean;
 }
 
+export interface AccountUpdate {
+  fullName: string;
+  email: string;
+  avatar: File | null;
+}
+
 export interface Credentials {
     email: string;
     password: string;
@@ -24,6 +30,18 @@ export interface Registration {
 @Injectable()
 export class AccountService {
     constructor(private readonly http: HttpClient) { }
+
+  update(value: AccountUpdate) {
+      const formData = new FormData();
+      Object.entries(value).forEach(([key, value]) =>
+        formData.append(key, value)
+      );
+
+      return this.http.put<User>('/api/account/update', formData, {
+        reportProgress: true,
+        observe: 'events'
+      });
+  }
 
     getCurrentUser() {
         return this.http.get<User>('/api/account/whoami');

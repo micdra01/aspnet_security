@@ -29,6 +29,24 @@ RETURNING
         using var connection = _dataSource.OpenConnection();
         return connection.QueryFirst<User>(sql, new { fullName, email, avatarUrl, admin });
     }
+    
+    public User Update(int id, string fullName, string email, string? avatarUrl)
+    {
+        const string sql = $@"
+UPDATE users 
+SET full_name = @fullName, email = @email, avatar_url = @avatarUrl
+WHERE id = @id
+RETURNING
+    id as {nameof(User.Id)},
+    full_name as {nameof(User.FullName)},
+    email as {nameof(User.Email)},
+    avatar_url as {nameof(User.AvatarUrl)},
+    admin as {nameof(User.IsAdmin)}
+    ;
+";
+        using var connection = _dataSource.OpenConnection();
+        return connection.QueryFirst<User>(sql, new { id, fullName, email, avatarUrl });
+    }
 
     public User? GetById(int id)
     {

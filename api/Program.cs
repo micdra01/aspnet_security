@@ -19,6 +19,7 @@ builder.Services.AddSingleton<FollowRepository>();
 builder.Services.AddSingleton<FollowService>();
 builder.Services.AddJwtService();
 builder.Services.AddSwaggerGenWithBearerJWT();
+builder.Services.AddAvatarBlobService();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

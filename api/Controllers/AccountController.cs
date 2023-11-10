@@ -14,11 +14,13 @@ public class AccountController : ControllerBase
 {
     private readonly AccountService _service;
     private readonly JwtService _jwtService;
+    private readonly BlobService _blobService;
 
-    public AccountController(AccountService service, JwtService jwtService)
+    public AccountController(AccountService service, JwtService jwtService, BlobService blobService)
     {
         _service = service;
         _jwtService = jwtService;
+        _blobService = blobService;
     }
 
     [HttpPost]
@@ -46,6 +48,25 @@ public class AccountController : ControllerBase
     {
         var data = HttpContext.GetSessionData();
         var user = _service.Get(data);
+        return Ok(user);
+    }
+
+    [RequireAuthentication]
+    [HttpPut]
+    [Route("/api/account/update")]
+    public IActionResult Update([FromForm] UpdateAccountCommandModel model, IFormFile? avatar)
+    {
+        var session = HttpContext.GetSessionData()!;
+        string? avatarUrl = null;
+        if (avatar != null)
+        {
+            avatarUrl = _service.Get(session)?.AvatarUrl;
+            using var avatarStream = avatar.OpenReadStream();
+            _blobService.Save("avatar", avatarStream, avatarUrl);
+        }
+        
+        avatarUrl = _service.Get(session)?.AvatarUrl;
+        var user = _service.Update(session, model, avatarUrl);
         return Ok(user);
     }
 }
